@@ -1,7 +1,12 @@
 package pl.wsb.kms.trainee.entity;
 
 import jakarta.persistence.*;
+import pl.wsb.kms.account.domain.UserAccount;
+import pl.wsb.kms.workout.entity.WorkoutSession;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "trainee_profile")
@@ -23,14 +28,22 @@ public class TraineeProfile {
     @Embedded
     private BodyMetrics bodyMetrics;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account_id", unique = true)
+    private UserAccount account;
+
+    @OneToMany(mappedBy = "trainee")
+    private List<WorkoutSession> sessions = new ArrayList<>();
+
     protected TraineeProfile() {
     }
 
-    public TraineeProfile(String fullName, LocalDate birthDate, String fitnessGoal, BodyMetrics bodyMetrics) {
+    public TraineeProfile(String fullName, LocalDate birthDate, String fitnessGoal, BodyMetrics bodyMetrics, UserAccount account) {
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.fitnessGoal = fitnessGoal;
         this.bodyMetrics = bodyMetrics;
+        this.account = account;
     }
 
     public Long getId() {
@@ -51,5 +64,13 @@ public class TraineeProfile {
 
     public BodyMetrics getBodyMetrics() {
         return bodyMetrics;
+    }
+
+    public UserAccount getAccount() {
+        return account;
+    }
+
+    public List<WorkoutSession> getSessions() {
+        return sessions;
     }
 }

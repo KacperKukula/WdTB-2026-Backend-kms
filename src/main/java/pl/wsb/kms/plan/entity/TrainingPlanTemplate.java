@@ -1,6 +1,10 @@
 package pl.wsb.kms.plan.entity;
 
 import jakarta.persistence.*;
+import pl.wsb.kms.exercise.entity.Exercise;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "training_plan_template")
@@ -21,6 +25,12 @@ public class TrainingPlanTemplate {
 
     @Column(name = "estimated_duration_minutes", nullable = false)
     private Integer estimatedDurationMinutes;
+
+    @ManyToMany
+    @JoinTable(name = "training_plan_template_exercise",
+            joinColumns = @JoinColumn(name = "training_plan_template_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_id"))
+    private Set<Exercise> exercises = new HashSet<>();
 
     protected TrainingPlanTemplate() {}
 
@@ -46,4 +56,6 @@ public class TrainingPlanTemplate {
     public String getDescription() { return description; }
 
     public Integer getEstimatedDurationMinutes() { return estimatedDurationMinutes; }
+
+    public Set<Exercise> getExercises() { return exercises; }
 }
